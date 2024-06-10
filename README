@@ -1,0 +1,14 @@
+A simple command line interface for streaming internet radio stations
+
+Currently Supported:
+    - NTS (channels 1 and 2)
+    - NOODS
+
+Usage:
+    Run the script for the station you want to tune into.
+    If different channels are available just add the number as
+    the first argument e.g. 'python NtsStream.py 2' :)
+
+Dependencies:
+    vlc-python
+    httpx

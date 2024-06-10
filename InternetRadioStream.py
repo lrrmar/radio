@@ -31,9 +31,13 @@ class InternetRadioStream:
         """
         return False
 
+    def _update_info(self):
+        while True:
+            self._get_info()
+            time.sleep(60)
+
     def _display_info(self):
         if self._get_info:
-            self._get_info()
             info_string = '   + + +   '.join([self._info[key] for key in self._info]) + '   + + +   '
         else:
             info_string = self.url + '   + + +   '
@@ -61,9 +65,12 @@ class InternetRadioStream:
 
         stream_thread = threading.Thread(target=self._get_stream,)
         vlc_thread = threading.Thread(target=self._stream_vlc,)
-        info_thread = threading.Thread(target=self._display_info,)
+        info_thread = threading.Thread(target=self._update_info,)
+        display_thread = threading.Thread(target=self._display_info,)
 
         stream_thread.start()
         time.sleep(2)
         vlc_thread.start()
         info_thread.start()
+        time.sleep(2)
+        display_thread.start()

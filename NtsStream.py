@@ -6,13 +6,7 @@ import os
 import time
 
 from InternetRadioStream import InternetRadioStream
-
-DEFAULT_BUFFER_FILE = '/home/lmar/radio/stream'
-
-
-
-
-
+from configs import DEFAULT_BUFFER_FILE
 
 class NtsStream(InternetRadioStream):
 

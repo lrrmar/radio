@@ -7,7 +7,7 @@ import os
 import sys
 import time
 
-DEFAULT_BUFFER_FILE = '/home/lmar/radio/stream'
+from configs import DEFAULT_BUFFER_FILE
 
 class InternetRadioStream:
 
@@ -27,16 +27,18 @@ class InternetRadioStream:
     @property
     def _get_info(self):
         """
-        Redefine in child class for specific web scraping
+        Redefine in child class for specific web scraping / info
         """
         return False
 
     def _update_info(self):
-        while True:
-            self._get_info()
-            time.sleep(60)
+        if self._get_info:
+            while True:
+                self._get_info()
+                time.sleep(60)
 
     def _display_info(self):
+
         if self._get_info:
             info_string = '   + + +   '.join([self._info[key] for key in self._info]) + '   + + +   '
         else:
@@ -44,6 +46,11 @@ class InternetRadioStream:
 
         while True:
             columns = os.get_terminal_size().columns
+
+            # If info_string does not fill columns, keep doubling!
+            while len(info_string) < columns:
+                info_string = info_string * 2
+
             sys.stdout.write('\r'+info_string[:columns])
             info_string = info_string[1:] + info_string[0]
             time.sleep(0.3)

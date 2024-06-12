@@ -21,7 +21,7 @@ class InternetRadioStream:
     def _get_stream(self):
         with open(self.buffer_file, 'wb') as buff:
             with httpx.stream('GET', self.url) as r:
-                for data in r.iter_raw():
+                for data in r.iter_bytes():
                     buff.write(data)
 
     @property

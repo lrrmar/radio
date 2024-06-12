@@ -1,9 +1,5 @@
-from urllib.request import urlopen
-import vlc
-import httpx
-import threading
-import os
-import time
+from urllib.request import Request, urlopen
+import sys
 
 from InternetRadioStream import InternetRadioStream
 from configs import DEFAULT_BUFFER_FILE
@@ -15,7 +11,7 @@ class NtsStream(InternetRadioStream):
         stream_url = 'https://stream-relay-geo.ntslive.net/stream'
         if self.channel == '2':
             stream_url += '2'
-        super().__init__(stream_url, DEFAULT_BUFFER_FILE)
+        super().__init__(stream_url, buffer_file)
         self.info_url = f"https://www.nts.live/{channel}"
         self._info = {}
 
@@ -27,7 +23,10 @@ class NtsStream(InternetRadioStream):
 
 
     def _get_info(self):
-        html = urlopen(self.info_url).read().decode('utf-8')
+        headers = {'Cache-Control': 'no-cache, no-transform'}
+        req = Request(self.info_url, headers=headers)
+        resp = urlopen(req)
+        html = urlopen(req).read().decode('utf-8')
         tags = {
             'title': ('<h1 class="text-bold">', '</h1>'),
             'location': ('<h2>', '</h2>'),
@@ -49,6 +48,7 @@ class NtsStream(InternetRadioStream):
 
 
 if __name__ == "__main__":
+
     try:
         channel = sys.argv[1]
     except:
